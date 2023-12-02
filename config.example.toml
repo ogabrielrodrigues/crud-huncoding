@@ -1,0 +1,6 @@
+# config.toml
+[api]
+port = ""
+
+[database]
+dsn = ""

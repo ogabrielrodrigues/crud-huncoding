@@ -1,6 +1,9 @@
 package rest
 
-import "net/http"
+import (
+	"net/http"
+	"strings"
+)
 
 type RestErr struct {
 	Message string  `json:"message"`
@@ -20,7 +23,7 @@ func (r *RestErr) Error() string {
 
 func NewRestErr(message, err string, code int, causes []Cause) *RestErr {
 	return &RestErr{
-		Message: message,
+		Message: strings.ToLower(message),
 		Err:     err,
 		Code:    code,
 		Causes:  causes,
@@ -29,7 +32,7 @@ func NewRestErr(message, err string, code int, causes []Cause) *RestErr {
 
 func NewBadRequestErr(message string, causes []Cause) *RestErr {
 	return &RestErr{
-		Message: message,
+		Message: strings.ToLower(message),
 		Err:     "bad_request",
 		Code:    http.StatusBadRequest,
 		Causes:  causes,
@@ -38,7 +41,7 @@ func NewBadRequestErr(message string, causes []Cause) *RestErr {
 
 func NewInternalServerErr(message string) *RestErr {
 	return &RestErr{
-		Message: message,
+		Message: strings.ToLower(message),
 		Err:     "internal_server_error",
 		Code:    http.StatusInternalServerError,
 		Causes:  nil,
@@ -47,7 +50,7 @@ func NewInternalServerErr(message string) *RestErr {
 
 func NewNotFoundErr(message string) *RestErr {
 	return &RestErr{
-		Message: message,
+		Message: strings.ToLower(message),
 		Err:     "not_found",
 		Code:    http.StatusNotFound,
 		Causes:  nil,
@@ -56,7 +59,7 @@ func NewNotFoundErr(message string) *RestErr {
 
 func NewForbiddenErr(message string) *RestErr {
 	return &RestErr{
-		Message: message,
+		Message: strings.ToLower(message),
 		Err:     "forbidden",
 		Code:    http.StatusForbidden,
 		Causes:  nil,
