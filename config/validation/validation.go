@@ -3,7 +3,6 @@ package validation
 import (
 	"encoding/json"
 	"errors"
-	"strings"
 
 	"github.com/gin-gonic/gin/binding"
 	"github.com/go-playground/locales/en"
@@ -14,7 +13,8 @@ import (
 )
 
 var (
-	transl ut.Translator
+	Validate = validator.New()
+	transl   ut.Translator
 )
 
 func init() {
@@ -27,55 +27,53 @@ func init() {
 	}
 }
 
-// func ValidateErr(err error) *rest.RestErr {
-// 	var json_err *json.UnmarshalTypeError
-// 	var validation_err validator.ValidationErrors
+func ValidateErr(err error) *rest.RestErr {
+	var json_err *json.UnmarshalTypeError
+	var validation_err validator.ValidationErrors
 
-// 	if errors.As(err, &json_err) {
-// 		return rest.NewBadRequestErr("invalid field type", nil)
-// 	} else if errors.As(err, &validation_err) {
-// 		causes := []rest.Cause{}
+	if errors.As(err, &json_err) {
+		return rest.NewBadRequestErr("invalid field type", nil)
+	} else if errors.As(err, &validation_err) {
+		causes := []rest.Cause{}
 
-// 		for _, e := range err.(validator.ValidationErrors) {
-// 			cause := rest.Cause{
-// 				Message: e.Translate(transl),
-// 				Field:   e.Field(),
-// 			}
-
-// 			fmt.Println(cause)
-
-// 			causes = append(causes, cause)
-// 		}
-
-// 		return rest.NewBadRequestErr("some field are invalid", causes)
-// 	} else {
-// 		return rest.NewBadRequestErr("error trying to convert fields", nil)
-// 	}
-// }
-
-func ValidateUserError(
-	validation_err error,
-) *rest.RestErr {
-
-	var jsonErr *json.UnmarshalTypeError
-	var jsonValidationError validator.ValidationErrors
-
-	if errors.As(validation_err, &jsonErr) {
-		return rest.NewBadRequestErr("Invalid field type", nil)
-	} else if errors.As(validation_err, &jsonValidationError) {
-		errorsCauses := []rest.Cause{}
-
-		for _, e := range validation_err.(validator.ValidationErrors) {
+		for _, e := range err.(validator.ValidationErrors) {
 			cause := rest.Cause{
-				Message: strings.ToLower(e.Translate(transl)),
-				Field:   strings.ToLower(e.Field()),
+				Message: e.Translate(transl),
+				Field:   e.Field(),
 			}
 
-			errorsCauses = append(errorsCauses, cause)
+			causes = append(causes, cause)
 		}
 
-		return rest.NewBadRequestErr("Some fields are invalid", errorsCauses)
+		return rest.NewBadRequestErr("some field are invalid", causes)
 	} else {
-		return rest.NewBadRequestErr("Error trying to convert fields", nil)
+		return rest.NewBadRequestErr("error trying to convert fields", nil)
 	}
 }
+
+// func ValidateUserError(
+// 	validation_err error,
+// ) *rest.RestErr {
+
+// 	var jsonErr *json.UnmarshalTypeError
+// 	var jsonValidationError validator.ValidationErrors
+
+// 	if errors.As(validation_err, &jsonErr) {
+// 		return rest.NewBadRequestErr("Invalid field type", nil)
+// 	} else if errors.As(validation_err, &jsonValidationError) {
+// 		errorsCauses := []rest.Cause{}
+
+// 		for _, e := range validation_err.(validator.ValidationErrors) {
+// 			cause := rest.Cause{
+// 				Message: strings.ToLower(e.Translate(transl)),
+// 				Field:   strings.ToLower(e.Field()),
+// 			}
+
+// 			errorsCauses = append(errorsCauses, cause)
+// 		}
+
+// 		return rest.NewBadRequestErr("Some fields are invalid", errorsCauses)
+// 	} else {
+// 		return rest.NewBadRequestErr("Error trying to convert fields", nil)
+// 	}
+// }
