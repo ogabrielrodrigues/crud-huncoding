@@ -30,10 +30,11 @@ func (uc *userHandlerInterface) CreateUser(ctx *gin.Context) {
 		user_request.Age,
 	)
 
-	if err := uc.service.CreateUser(domain); err != nil {
+	user_domain, err := uc.service.CreateUser(domain)
+	if err != nil {
 		ctx.JSON(err.Code, err)
 		return
 	}
 
-	ctx.JSON(http.StatusCreated, view.ConvertDomainToResponse(domain))
+	ctx.JSON(http.StatusCreated, view.ConvertDomainToResponse(user_domain))
 }

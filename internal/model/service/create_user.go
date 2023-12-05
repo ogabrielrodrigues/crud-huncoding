@@ -5,8 +5,8 @@ import (
 	"github.com/ogabrielrodrigues/crud-huncoding/internal/model"
 )
 
-func (us *userDomainService) CreateUser(user_domain model.UserDomainInterface) *rest.RestErr {
+func (us *userDomainService) CreateUser(user_domain model.UserDomainInterface) (model.UserDomainInterface, *rest.RestErr) {
 	user_domain.EncryptPassword()
 
-	return nil
+	return us.repository.CreateUser(user_domain)
 }

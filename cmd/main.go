@@ -7,9 +7,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/ogabrielrodrigues/crud-huncoding/config"
 	"github.com/ogabrielrodrigues/crud-huncoding/config/logger"
+	"github.com/ogabrielrodrigues/crud-huncoding/internal/handler/factory"
 	"github.com/ogabrielrodrigues/crud-huncoding/internal/handler/routes"
-	handler "github.com/ogabrielrodrigues/crud-huncoding/internal/handler/user_handler"
-	"github.com/ogabrielrodrigues/crud-huncoding/internal/model/service"
 )
 
 func main() {
@@ -19,8 +18,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	user_service := service.NewUserDomainService()
-	user_handler := handler.NewUserHandlerInterface(user_service)
+	user_handler := factory.NewUserFactory()
 
 	router := gin.Default()
 	routes.Routes(&router.RouterGroup, user_handler)

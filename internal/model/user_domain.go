@@ -6,6 +6,7 @@ import (
 )
 
 type userDomain struct {
+	id       string
 	name     string
 	email    string
 	age      int8
@@ -13,6 +14,8 @@ type userDomain struct {
 }
 
 type UserDomainInterface interface {
+	SetID(id string)
+	GetID() string
 	GetName() string
 	GetEmail() string
 	GetAge() int8
@@ -23,10 +26,11 @@ type UserDomainInterface interface {
 
 func NewUserDomain(name, email, password string, age int8) UserDomainInterface {
 	return &userDomain{
-		name,
-		email,
-		age,
-		password,
+		id:       "",
+		name:     name,
+		email:    email,
+		age:      age,
+		password: password,
 	}
 }
 
@@ -36,6 +40,14 @@ func (ud *userDomain) EncryptPassword() {
 
 	hash.Write([]byte(ud.password))
 	ud.password = hex.EncodeToString(hash.Sum(nil))
+}
+
+func (ud *userDomain) SetID(id string) {
+	ud.id = id
+}
+
+func (ud *userDomain) GetID() string {
+	return ud.id
 }
 
 func (ud *userDomain) GetName() string {
